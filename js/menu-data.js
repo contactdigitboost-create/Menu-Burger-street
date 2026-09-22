@@ -40,7 +40,6 @@ window.MENU = {
       items: [
         { name: "Cheese",         description: "1 steak 90 g + cheddar",                                   price: 6.5 },
         { name: "Double Cheese",  description: "2 steaks 90 g + cheddar",                                  price: 8.5 },
-        { name: "Le 180",         description: "2 steaks 90 g + cheddar",                                  price: 8.5 },
         { name: "Chèvre",         description: "1 steak haché 90 g + fromage de chèvre + 1 cheddar",       price: 8 },
         { name: "Bacon",          description: "2 steaks 90 g + 2 bacon + 2 cheddar",                      price: 10 },
         { name: "Chicken",        description: "Chicken pané + cheddar",                                   price: 7 },
