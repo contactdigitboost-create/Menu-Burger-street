@@ -180,21 +180,6 @@ svg { flex: none; }
   60%      { box-shadow: 0 14px 36px rgba(255, 180, 0, 0.32), 0 0 0 16px rgba(255, 180, 0, 0), inset 0 -5px 0 rgba(0, 0, 0, 0.14); }
 }
 
-.home-info {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 6px 22px;
-  margin-top: 40px;
-  color: var(--muted);
-  font-size: 0.9rem;
-}
-
-.home-info a {
-  text-decoration: none;
-}
-.home-info a:hover { color: var(--text); }
-
 /* ---------- En-tête collant ---------- */
 
 .sticky-head {
@@ -235,12 +220,17 @@ svg { flex: none; }
 .back svg { width: 22px; height: 22px; }
 .back:hover { background: var(--surface-2); }
 
+.back { flex: none; }
+
 .brand {
+  min-width: 0;
+  overflow: hidden;
   font-family: var(--font-display);
-  font-size: 1.3rem;
+  font-size: clamp(1.05rem, 5.2vw, 1.3rem);
   letter-spacing: 0.02em;
   text-transform: uppercase;
   text-decoration: none;
+  text-overflow: ellipsis;
   white-space: nowrap;
 }
 .brand span { color: var(--accent); }
@@ -478,6 +468,30 @@ svg { flex: none; }
   color: var(--accent);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
+}
+
+.item-choices-label {
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.item-choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.choice {
+  padding: 5px 11px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  font-size: 0.88rem;
 }
 
 .item-tags {

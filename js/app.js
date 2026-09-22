@@ -56,16 +56,6 @@
     el.hidden = !value;
   });
 
-  const info = [
-    restaurant.address && h("li", { text: "📍 " + restaurant.address }),
-    restaurant.hours && h("li", { text: "🕒 " + restaurant.hours }),
-    restaurant.phone && h("li", {},
-      h("a", { href: "tel:" + restaurant.phone.replace(/[^\d+]/g, ""), text: "📞 " + restaurant.phone })
-    ),
-  ].filter(Boolean);
-  $("#home-info").replaceChildren(...info);
-  $("#home-info").hidden = info.length === 0;
-
   /* ---------- Grille des catégories ---------- */
 
   $("#cat-grid").replaceChildren(
@@ -74,7 +64,7 @@
         h("a", { class: "cat-card", href: `#menu/${cat.id}` },
           h("span", { class: "cat-emoji", "aria-hidden": "true", text: cat.emoji || "🍽️" }),
           h("span", { class: "cat-name", text: cat.name }),
-          h("span", { class: "cat-count", text: `${cat.items.length} choix` })
+          h("span", { class: "cat-count", text: cat.countLabel || `${cat.items.length} choix` })
         )
       )
     )
@@ -97,6 +87,7 @@
   function renderItem(item) {
     const prices = Array.isArray(item.prices) ? item.prices : [];
     const tags = Array.isArray(item.tags) ? item.tags : [];
+    const choices = Array.isArray(item.choices) ? item.choices : [];
     const hasSinglePrice = prices.length === 0 && item.price != null;
 
     return h("li", { class: "item" },
@@ -115,6 +106,10 @@
               h("strong", { text: formatPrice(p.price) })
             )
           )
+        ),
+        choices.length > 0 && item.choicesLabel && h("p", { class: "item-choices-label", text: item.choicesLabel }),
+        choices.length > 0 && h("ul", { class: "item-choices" },
+          choices.map((c) => h("li", { class: "choice", text: c }))
         ),
         tags.length > 0 && h("ul", { class: "item-tags" },
           tags.map((t) => {

@@ -1,39 +1,35 @@
 /* =====================================================================
    MENU BURGER STREET — LE SEUL FICHIER À MODIFIER
    ---------------------------------------------------------------------
-   Tout le contenu du site est ici : infos du restaurant, catégories,
-   plats, descriptions et prix. Le reste du site s'adapte tout seul.
-
-   ⚠️  Les plats et prix ci-dessous sont des EXEMPLES à remplacer
-       par la vraie carte du restaurant.
+   Tout le contenu du site est ici : catégories, plats, descriptions
+   et prix. Le reste du site s'adapte tout seul.
 
    Pour chaque plat :
-     name        : nom du plat (obligatoire)
-     description : ingrédients / détail (facultatif)
-     price       : prix unique, ex. 8.9  → affiche « 8,90 € »
-     prices      : plusieurs prix, ex. [{ label: "Seul", price: 8.9 },
-                                        { label: "Menu", price: 11.9 }]
-                   (utiliser soit price, soit prices)
-     tags        : badges facultatifs parmi "new", "best", "spicy", "veggie"
-                   (ou n'importe quel texte libre, ex. "Halal")
-     image       : photo facultative, ex. "images/classic.jpg"
+     name         : nom du plat (obligatoire)
+     description  : ingrédients / détail (facultatif)
+     price        : prix unique, ex. 8.5  → affiche « 8,50 € »
+     prices       : plusieurs prix, ex. [{ label: "1 viande", price: 9 },
+                                         { label: "2 viandes", price: 10 }]
+                    (utiliser soit price, soit prices)
+     choices      : liste d'options affichées en pastilles, ex. ["Kebab", "Merguez"]
+     choicesLabel : titre au-dessus des options (facultatif)
+     tags         : badges facultatifs parmi "new", "best", "spicy", "veggie"
+                    (ou n'importe quel texte libre, ex. "Halal")
+     image        : photo facultative, ex. "images/cheese.jpg"
 
    Pour chaque catégorie :
-     id    : identifiant sans espace ni accent (utilisé dans l'adresse)
-     name  : nom affiché
-     emoji : icône de la catégorie
-     note  : phrase d'info affichée en haut de la catégorie (facultatif)
+     id         : identifiant sans espace ni accent (utilisé dans l'adresse)
+     name       : nom affiché
+     emoji      : icône de la catégorie
+     note       : phrase d'info affichée en haut de la catégorie (facultatif)
+     countLabel : texte sous le nom de la catégorie (par défaut « X choix »)
    ===================================================================== */
 
 window.MENU = {
   restaurant: {
     name: "Burger Street",
-    tagline: "Burgers maison · Street food",
-    // Laisser vide ("") pour ne pas afficher la ligne
-    address: "",   // ex. "12 rue de la République, 69001 Lyon"
-    phone: "",     // ex. "04 00 00 00 00"
-    hours: "",     // ex. "7j/7 · 11h30–14h30 et 18h30–23h"
-    footnote: "Prix nets en euros, service compris. Liste des allergènes disponible sur demande auprès de notre équipe."
+    tagline: "Burgers · Sandwichs · Tacos",
+    footnote: "Prix nets en euros. Informations sur les allergènes disponibles sur demande."
   },
 
   categories: [
@@ -41,216 +37,128 @@ window.MENU = {
       id: "burgers",
       name: "Burgers",
       emoji: "🍔",
-      note: "Servis dans un pain brioché toasté. En menu : frites maison + boisson 33 cl.",
+      items: [
+        { name: "Cheese",         description: "1 steak 90 g + cheddar",                                   price: 6.5 },
+        { name: "Double Cheese",  description: "2 steaks 90 g + cheddar",                                  price: 8.5 },
+        { name: "Le 180",         description: "2 steaks 90 g + cheddar",                                  price: 8.5 },
+        { name: "Chèvre",         description: "1 steak haché 90 g + fromage de chèvre + 1 cheddar",       price: 8 },
+        { name: "Bacon",          description: "2 steaks 90 g + 2 bacon + 2 cheddar",                      price: 10 },
+        { name: "Chicken",        description: "Chicken pané + cheddar",                                   price: 7 },
+        { name: "Double Chicken", description: "2 chicken panés + cheddar",                                price: 8.5 },
+        { name: "Triple Chicken", description: "3 chicken panés + cheddar",                                price: 10 },
+        { name: "Fish",           description: "Fish pané + cheddar",                                      price: 7 }
+      ]
+    },
+
+    {
+      id: "sandwichs",
+      name: "Sandwichs",
+      emoji: "🥙",
+      items: [
+        { name: "Kebab",    description: "Viande de kebab",                                    price: 8.5 },
+        { name: "Curry",    description: "Chicken curry + cheddar",                            price: 8.5 },
+        { name: "Paprika",  description: "Chicken paprika + cheddar",                          price: 8.5 },
+        { name: "Escalope", description: "Escalope de poulet + cheddar",                       price: 8.5 },
+        { name: "Steak",    description: "2 steaks 45 g + cheddar",                            price: 8.5 },
+        { name: "Suprême",  description: "2 steaks 45 g + bacon + œuf + fromage",              price: 8.5 },
+        { name: "Merguez",  description: "2 pièces de merguez",                                price: 8.5 },
+        { name: "Country",  description: "1 steak 45 g + galette de pomme de terre + cheddar", price: 8.5 },
+        { name: "Radical",  description: "2 steaks 45 g + cordon bleu + cheddar",              price: 8.5 },
+        { name: "Boursin",  description: "Escalope + Boursin + cheddar",                       price: 8.5 }
+      ]
+    },
+
+    {
+      id: "tacos",
+      name: "Tacos",
+      emoji: "🌯",
+      countLabel: "1 à 3 viandes",
       items: [
         {
-          name: "Classic",
-          description: "Steak de bœuf 150 g, cheddar, salade, tomate, oignons rouges, pickles, sauce maison.",
-          prices: [{ label: "Seul", price: 8.9 }, { label: "Menu", price: 11.9 }]
+          name: "Tacos classique",
+          prices: [
+            { label: "1 viande",  price: 9 },
+            { label: "2 viandes", price: 10 },
+            { label: "3 viandes", price: 11 }
+          ],
+          choicesLabel: "Viandes au choix",
+          choices: ["Kebab", "Merguez", "Escalope", "Curry", "Tenders", "Cordon bleu", "Nuggets", "Viande hachée"]
         },
         {
-          name: "Double Cheese",
-          description: "Deux steaks de bœuf, double cheddar fondu, oignons, pickles, ketchup, moutarde.",
-          prices: [{ label: "Seul", price: 10.9 }, { label: "Menu", price: 13.9 }],
-          tags: ["best"]
-        },
-        {
-          name: "Smash Street",
-          description: "Deux smash steaks croustillants, cheddar, oignons caramélisés, sauce Street.",
-          prices: [{ label: "Seul", price: 11.5 }, { label: "Menu", price: 14.5 }],
-          tags: ["best"]
-        },
-        {
-          name: "Bacon BBQ",
-          description: "Steak de bœuf 150 g, bacon grillé, cheddar, oignons frits, sauce barbecue fumée.",
-          prices: [{ label: "Seul", price: 10.5 }, { label: "Menu", price: 13.5 }]
-        },
-        {
-          name: "Chicken Crispy",
-          description: "Filet de poulet pané croustillant, cheddar, salade, tomate, sauce Street.",
-          prices: [{ label: "Seul", price: 9.5 }, { label: "Menu", price: 12.5 }]
-        },
-        {
-          name: "Spicy Street",
-          description: "Steak de bœuf 150 g, pepper jack, jalapeños, oignons frits, sauce piquante maison.",
-          prices: [{ label: "Seul", price: 10.5 }, { label: "Menu", price: 13.5 }],
-          tags: ["spicy"]
-        },
-        {
-          name: "Montagnard",
-          description: "Steak de bœuf 150 g, raclette fondue, poitrine fumée, oignons confits, sauce au poivre.",
-          prices: [{ label: "Seul", price: 11.9 }, { label: "Menu", price: 14.9 }],
-          tags: ["new"]
-        },
-        {
-          name: "Veggie",
-          description: "Galette végétale, cheddar, avocat, salade, tomate, oignons rouges, sauce yaourt-herbes.",
-          prices: [{ label: "Seul", price: 9.9 }, { label: "Menu", price: 12.9 }],
-          tags: ["veggie"]
+          name: "Suppléments",
+          choices: ["Chèvre", "Cheddar", "Boursin", "Mozza", "Lardons", "Olives", "Chorizo", "Raclette"]
         }
       ]
     },
 
     {
-      id: "formules",
-      name: "Formules",
-      emoji: "🧾",
-      note: "Formules non cumulables avec d'autres offres.",
+      id: "paninis",
+      name: "Paninis",
+      emoji: "🥪",
+      countLabel: "7 saveurs",
       items: [
         {
-          name: "Formule Midi",
-          description: "Du lundi au vendredi, de 11h30 à 14h30. Classic ou Chicken Crispy + frites maison + boisson 33 cl.",
-          price: 10.9
-        },
-        {
-          name: "Formule Étudiant",
-          description: "Sur présentation de la carte étudiante. Classic, Chicken Crispy ou Veggie + frites + boisson 33 cl.",
-          price: 10.5
-        },
-        {
-          name: "Box Duo",
-          description: "2 burgers au choix, 2 frites maison, 6 tenders, 2 boissons 33 cl.",
-          price: 26.9,
-          tags: ["best"]
-        },
-        {
-          name: "Box Famille",
-          description: "4 burgers au choix, 4 frites maison, 12 tenders ou wings, 1 boisson 1,5 L.",
-          price: 49.9
+          name: "Panini",
+          price: 6,
+          choicesLabel: "Au choix",
+          choices: ["Poulet", "Steak", "3 Fromages", "Jambon", "Saumon", "Kebab", "Merguez"]
         }
       ]
     },
 
     {
-      id: "chicken",
-      name: "Chicken",
+      id: "tex-mex",
+      name: "Tex-Mex",
       emoji: "🍗",
-      note: "Poulet mariné et pané maison, servi avec une sauce au choix.",
       items: [
-        {
-          name: "Tenders",
-          description: "Aiguillettes de poulet panées, croustillantes et tendres.",
-          prices: [{ label: "x3", price: 5.5 }, { label: "x5", price: 7.9 }, { label: "x8", price: 11.5 }]
-        },
-        {
-          name: "Wings",
-          description: "Ailes de poulet marinées, nature ou sauce buffalo.",
-          prices: [{ label: "x6", price: 6.5 }, { label: "x12", price: 11.9 }]
-        },
-        {
-          name: "Nuggets",
-          description: "Nuggets de poulet dorés.",
-          prices: [{ label: "x6", price: 4.9 }, { label: "x9", price: 6.9 }]
-        },
-        {
-          name: "Chicken Box",
-          description: "4 tenders, 4 wings, frites maison et 2 sauces au choix.",
-          price: 12.9,
-          tags: ["best"]
-        }
+        { name: "Tenders",      description: "5 pièces", price: 7 },
+        { name: "Wings",        description: "5 pièces", price: 6 },
+        { name: "Nuggets",      description: "5 pièces", price: 5 },
+        { name: "Mozza sticks", description: "5 pièces", price: 6 },
+        { name: "Oignon rings", description: "6 pièces", price: 5 }
       ]
     },
 
     {
-      id: "accompagnements",
-      name: "Accompagnements",
-      emoji: "🍟",
-      note: "Sauces : ketchup, mayonnaise, barbecue, samouraï, algérienne, biggy, sauce Street.",
+      id: "salades",
+      name: "Salades",
+      emoji: "🥗",
       items: [
-        {
-          name: "Frites maison",
-          description: "Pommes de terre fraîches coupées sur place.",
-          prices: [{ label: "Petite", price: 3 }, { label: "Grande", price: 4 }],
-          tags: ["veggie"]
-        },
-        {
-          name: "Cheesy Fries",
-          description: "Frites maison nappées de cheddar fondu et de bacon croustillant.",
-          price: 5.9,
-          tags: ["best"]
-        },
-        {
-          name: "Frites de patate douce",
-          description: "Croustillantes à l'extérieur, fondantes à l'intérieur.",
-          price: 4.5,
-          tags: ["veggie"]
-        },
-        {
-          name: "Onion rings",
-          description: "6 rondelles d'oignon panées.",
-          price: 4,
-          tags: ["veggie"]
-        },
-        {
-          name: "Mozza sticks",
-          description: "5 bâtonnets de mozzarella panés, sauce tomate.",
-          price: 4.9,
-          tags: ["veggie"]
-        },
-        {
-          name: "Salade verte",
-          description: "Jeunes pousses, tomates cerises, vinaigrette maison.",
-          price: 3.5,
-          tags: ["veggie"]
-        },
-        {
-          name: "Sauce supplémentaire",
-          description: "Au choix parmi nos sauces.",
-          price: 0.5
-        }
+        { name: "Niçoise",     description: "Salade, tomate, thon, maïs, œuf, olives",                         price: 8 },
+        { name: "Genova",      description: "Salade, tomate, lardons, poulet, emmental",                       price: 8 },
+        { name: "Chèvre chaud", description: "Salade, tomate, chèvre chaud sur toast, lardons",                price: 8 },
+        { name: "Norvégienne", description: "Salade, tomate, saumon, avocat, crème fraîche, maïs, citron",     price: 8 }
       ]
     },
 
     {
-      id: "kids",
-      name: "Menu Kids",
-      emoji: "🧒",
-      note: "Pour les moins de 10 ans. Une surprise offerte avec chaque menu !",
+      id: "pates",
+      name: "Pâtes",
+      emoji: "🍝",
       items: [
-        {
-          name: "Kids Burger",
-          description: "Cheeseburger + petite frites + jus de fruits ou eau + compote.",
-          price: 7.5
-        },
-        {
-          name: "Kids Nuggets",
-          description: "4 nuggets + petite frites + jus de fruits ou eau + compote.",
-          price: 7.5
-        }
+        { name: "Carbonara",  description: "Crème fraîche, lardons, œuf",          price: 8 },
+        { name: "Bolognaise", description: "Viande hachée, sauce tomate",          price: 8 },
+        { name: "Saumon",     description: "Crème fraîche, saumon, sauce tomate",  price: 8 },
+        { name: "4 Fromages", description: "Crème fraîche, assortiment de fromages", price: 8 },
+        { name: "Escalope",   description: "Crème fraîche, champignons, escalope", price: 8 }
       ]
     },
 
     {
       id: "desserts",
       name: "Desserts",
-      emoji: "🍩",
+      emoji: "🍰",
       items: [
         {
-          name: "Cookie géant",
-          description: "Cookie moelleux aux pépites de chocolat, cuit sur place.",
-          price: 3
-        },
-        {
-          name: "Brownie",
-          description: "Brownie au chocolat noir et noix de pécan.",
-          price: 3.5
-        },
-        {
-          name: "Tiramisu maison",
-          description: "Au café ou au spéculoos.",
-          price: 4.5
-        },
-        {
-          name: "Sundae",
-          description: "Glace vanille, coulis caramel ou chocolat, éclats de cacahuètes.",
-          price: 3.9
-        },
-        {
           name: "Milkshake",
-          description: "Vanille, chocolat, fraise ou caramel beurre salé.",
-          price: 4.9,
-          tags: ["best"]
-        }
+          price: 4,
+          choicesLabel: "Au choix",
+          choices: ["Nutella", "M&M's", "Kinder Bueno", "Oreo", "Milka", "Snickers", "Lotus", "KitKat", "Daim", "Twix"]
+        },
+        { name: "Glace Häagen-Dazs", price: 4 },
+        { name: "Brownie",           price: 3 },
+        { name: "Tarte au Daim",     price: 3 },
+        { name: "Tiramisu",          price: 3 }
       ]
     },
 
@@ -259,30 +167,21 @@ window.MENU = {
       name: "Boissons",
       emoji: "🥤",
       items: [
+        { name: "Coca-Cola / Oasis", price: 2 },
+        { name: "Ice Tea",           price: 2 },
+        { name: "Bouteille d'eau",   description: "50 cl", price: 1.5 }
+      ]
+    },
+
+    {
+      id: "sauces",
+      name: "Sauces",
+      emoji: "🥫",
+      countLabel: "7 sauces",
+      items: [
         {
-          name: "Sodas",
-          description: "Cola, cola zéro, orange, citron, thé glacé pêche. 33 cl.",
-          price: 2.5
-        },
-        {
-          name: "Eau minérale",
-          description: "Plate ou gazeuse. 50 cl.",
-          price: 2
-        },
-        {
-          name: "Jus de fruits",
-          description: "Orange, pomme ou multifruits. 25 cl.",
-          price: 2.8
-        },
-        {
-          name: "Limonade artisanale",
-          description: "Citron, framboise ou menthe. 33 cl.",
-          price: 3.5
-        },
-        {
-          name: "Grande bouteille",
-          description: "Soda au choix. 1,5 L.",
-          price: 4.5
+          name: "Nos sauces",
+          choices: ["Blanche", "Samouraï", "Algérienne", "Harissa", "Ketchup", "Mayo", "Biggy"]
         }
       ]
     }
