@@ -7,12 +7,19 @@
   const euro = new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR" });
   const formatPrice = (p) => (typeof p === "number" ? euro.format(p) : String(p));
 
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
+  const smooth = () => (reduceMotion.matches ? "auto" : "smooth");
+
   const TAGS = {
     new:    { label: "Nouveau",     icon: "✨" },
     best:   { label: "Best-seller", icon: "⭐" },
     spicy:  { label: "Épicé",       icon: "🌶️" },
     veggie: { label: "Végétarien",  icon: "🌱" },
   };
+
+  // Différence de hauteur de l'en-tête entre normal et compact (voir --bar-h dans style.css)
+  const COMPACT_DELTA = 14;
 
   const $ = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => root.querySelectorAll(sel);
@@ -33,13 +40,11 @@
     return el;
   }
 
-  const views = {
-    home: $("#view-home"),
-    categories: $("#view-categories"),
-    category: $("#view-category"),
-  };
+  const views = { home: $("#view-home"), menu: $("#view-menu") };
+  const head = $("#menu-head");
+  const nav = $("#cat-nav");
 
-  /* ---------- Infos restaurant ---------- */
+  /* ---------- Textes du restaurant ---------- */
 
   const nameParts = restaurant.name.trim().split(/\s+/);
   const brandNode = () => {
@@ -47,8 +52,6 @@
     const first = last ? nameParts.slice(0, -1).join(" ") + " " : nameParts[0];
     return [first, last && h("span", { text: last })];
   };
-
-  $("#logo").replaceChildren(...brandNode());
   $$("[data-brand]").forEach((el) => el.replaceChildren(...brandNode()));
   $$("[data-restaurant]").forEach((el) => {
     const value = restaurant[el.dataset.restaurant];
@@ -56,62 +59,32 @@
     el.hidden = !value;
   });
 
-  /* ---------- Grille des catégories ---------- */
-
-  $("#cat-grid").replaceChildren(
-    ...categories.map((cat) =>
-      h("li", {},
-        h("a", { class: "cat-card", href: `#menu/${cat.id}` },
-          h("span", { class: "cat-emoji", "aria-hidden": "true", text: cat.emoji || "🍽️" }),
-          h("span", { class: "cat-name", text: cat.name }),
-          h("span", { class: "cat-count", text: cat.countLabel || `${cat.items.length} choix` })
-        )
-      )
-    )
-  );
-
-  /* ---------- Onglets de catégories ---------- */
-
-  const tabs = $("#cat-tabs");
-  tabs.replaceChildren(
-    ...categories.map((cat) =>
-      h("a", { class: "tab", href: `#menu/${cat.id}`, "data-id": cat.id },
-        h("span", { "aria-hidden": "true", text: cat.emoji || "🍽️" }),
-        cat.name
-      )
-    )
-  );
-
-  /* ---------- Détail d'une catégorie ---------- */
+  /* ---------- Plats ---------- */
 
   function renderItem(item) {
     const prices = Array.isArray(item.prices) ? item.prices : [];
-    const tags = Array.isArray(item.tags) ? item.tags : [];
     const choices = Array.isArray(item.choices) ? item.choices : [];
+    const tags = Array.isArray(item.tags) ? item.tags : [];
     const hasSinglePrice = prices.length === 0 && item.price != null;
 
-    return h("li", { class: "item" },
+    return h("li", { class: "item reveal" },
       item.image && h("img", { class: "item-img", src: item.image, alt: "", loading: "lazy", width: "88", height: "88" }),
       h("div", { class: "item-body" },
-        h("div", { class: "item-head" },
-          h("h3", { class: "item-name", text: item.name }),
-          hasSinglePrice && h("span", { class: "item-leader", "aria-hidden": "true" }),
-          hasSinglePrice && h("span", { class: "item-price", text: formatPrice(item.price) })
-        ),
+        h("h3", { class: "item-name", text: item.name }),
         item.description && h("p", { class: "item-desc", text: item.description }),
         prices.length > 0 && h("ul", { class: "item-prices" },
           prices.map((p) =>
-            h("li", { class: "price-chip" },
+            h("li", { class: "price-opt" },
               p.label && h("span", { class: "price-label", text: p.label }),
-              h("strong", { text: formatPrice(p.price) })
+              h("span", { class: "price-tag", text: formatPrice(p.price) })
             )
           )
         ),
-        choices.length > 0 && item.choicesLabel && h("p", { class: "item-choices-label", text: item.choicesLabel }),
-        choices.length > 0 && h("ul", { class: "item-choices" },
+        choices.length > 0 && item.choicesLabel && h("p", { class: "choices-label", text: item.choicesLabel }),
+        choices.length > 0 && h("ul", { class: "choices" },
           choices.map((c) => h("li", { class: "choice", text: c }))
         ),
-        tags.length > 0 && h("ul", { class: "item-tags" },
+        tags.length > 0 && h("ul", { class: "tags" },
           tags.map((t) => {
             const tag = TAGS[t] || { label: t, icon: "" };
             return h("li", { class: `tag tag-${TAGS[t] ? t : "custom"}` },
@@ -120,83 +93,151 @@
             );
           })
         )
-      )
+      ),
+      hasSinglePrice && h("span", { class: "price-tag", text: formatPrice(item.price) })
     );
   }
 
-  function pagerLink(cat, dir) {
-    return h("a", { class: `pager-link pager-${dir}`, href: `#menu/${cat.id}` },
-      h("small", { text: dir === "prev" ? "Précédent" : "Suivant" }),
-      h("span", { text: dir === "prev" ? `← ${cat.name}` : `${cat.name} →` })
+  const entries = categories.map((cat) => {
+    const link = h("a", { class: "cat-link", href: `#menu/${cat.id}`, text: cat.name });
+    const section = h("section", { class: "cat", id: `cat-${cat.id}`, "aria-labelledby": `title-${cat.id}` },
+      h("h2", { class: "cat-title reveal", id: `title-${cat.id}`, text: cat.name }),
+      cat.note && h("p", { class: "cat-note reveal", text: cat.note }),
+      h("ul", { class: "items" }, cat.items.map(renderItem))
     );
+    return { cat, link, section };
+  });
+
+  nav.replaceChildren(...entries.map((e) => e.link));
+  $("#sections").replaceChildren(...entries.map((e) => e.section));
+
+  /* ---------- Barre de catégories : défilement + catégorie active ---------- */
+
+  function scrollToEntry(entry, animate) {
+    const compactHeight = head.offsetHeight - (head.classList.contains("is-compact") ? 0 : COMPACT_DELTA);
+    const top = entry.section.getBoundingClientRect().top + window.scrollY - compactHeight + 1;
+    window.scrollTo({ top: Math.max(0, top), behavior: animate ? smooth() : "auto" });
   }
 
-  function renderCategory(cat) {
-    $("#cat-title").textContent = cat.name;
-
-    const note = $("#cat-note");
-    note.textContent = cat.note || "";
-    note.hidden = !cat.note;
-
-    $("#cat-items").replaceChildren(...cat.items.map(renderItem));
-
-    $$(".tab", tabs).forEach((tab) => {
-      const active = tab.dataset.id === cat.id;
-      tab.classList.toggle("is-active", active);
-      if (active) tab.setAttribute("aria-current", "page");
-      else tab.removeAttribute("aria-current");
+  entries.forEach((entry) => {
+    entry.link.addEventListener("click", (e) => {
+      e.preventDefault();
+      scrollToEntry(entry, true);
+      history.replaceState(null, "", `#menu/${entry.cat.id}`);
     });
+  });
 
-    const i = categories.indexOf(cat);
-    const prev = categories[i - 1];
-    const next = categories[i + 1];
-    $("#cat-pager").replaceChildren(
-      prev ? pagerLink(prev, "prev") : h("span"),
-      next ? pagerLink(next, "next") : h("span")
-    );
-  }
-
-  function centerActiveTab(smooth) {
-    const active = $(".tab.is-active", tabs);
-    if (!active) return;
-    tabs.scrollTo({
-      left: active.offsetLeft - (tabs.clientWidth - active.offsetWidth) / 2,
-      behavior: smooth ? "smooth" : "auto",
+  let activeEntry = null;
+  function setActive(entry) {
+    if (entry === activeEntry) return;
+    activeEntry = entry;
+    entries.forEach((e) => {
+      if (e === entry) e.link.setAttribute("aria-current", "true");
+      else e.link.removeAttribute("aria-current");
+    });
+    nav.scrollTo({
+      left: entry.link.offsetLeft - (nav.clientWidth - entry.link.offsetWidth) / 2,
+      behavior: smooth(),
     });
   }
 
-  /* ---------- Navigation (#, #menu, #menu/burgers) ---------- */
+  let ticking = false;
+  function onScroll() {
+    if (ticking || views.menu.hidden) return;
+    ticking = true;
+    requestAnimationFrame(() => {
+      ticking = false;
+      const y = window.scrollY;
+      head.classList.toggle("is-compact", y > 10);
 
-  let firstRender = true;
+      const line = head.getBoundingClientRect().bottom + 12;
+      let current = entries[0];
+      for (const e of entries) if (e.section.getBoundingClientRect().top <= line) current = e;
+      if (window.innerHeight + y >= document.documentElement.scrollHeight - 2) current = entries[entries.length - 1];
+      setActive(current);
+    });
+  }
+  window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", onScroll, { passive: true });
 
-  function show(name, title) {
-    for (const [key, view] of Object.entries(views)) view.hidden = key !== name;
-    document.title = title ? `${title} · ${restaurant.name}` : restaurant.name;
-    window.scrollTo(0, 0);
-    if (!firstRender) {
-      const heading = $("[data-focus]", views[name]);
-      if (heading) heading.focus({ preventScroll: true });
+  /* ---------- Apparition au scroll ---------- */
+
+  let observer = null;
+  function startReveal() {
+    if (observer !== null) return;
+    if (reduceMotion.matches || !("IntersectionObserver" in window)) {
+      observer = false;
+      return;
     }
+    document.documentElement.classList.add("js-reveal");
+    observer = new IntersectionObserver((list) => {
+      let i = 0;
+      for (const entry of list) {
+        if (!entry.isIntersecting) continue;
+        entry.target.style.transitionDelay = Math.min(i++ * 45, 240) + "ms";
+        entry.target.classList.add("is-in");
+        observer.unobserve(entry.target);
+      }
+    }, { rootMargin: "0px 0px -6% 0px", threshold: 0.05 });
+    $$(".reveal").forEach((el) => observer.observe(el));
+  }
+
+  /* ---------- Bouton « Menu » magnétique (souris uniquement) ---------- */
+
+  const btn = $("#btn-menu");
+  const btnWrap = $("#btn-wrap");
+  let magnetOn = false;
+  let magnetFrame = 0;
+
+  function setMagnet(x, y, scale) {
+    magnetOn = x !== 0 || y !== 0;
+    cancelAnimationFrame(magnetFrame);
+    magnetFrame = requestAnimationFrame(() => {
+      btn.style.transform = x || y || scale !== 1 ? `translate3d(${x}px, ${y}px, 0) scale(${scale})` : "";
+    });
+  }
+
+  views.home.addEventListener("pointermove", (e) => {
+    if (e.pointerType !== "mouse" || reduceMotion.matches || !finePointer.matches) return;
+    const r = btnWrap.getBoundingClientRect();
+    const dx = e.clientX - (r.left + r.width / 2);
+    const dy = e.clientY - (r.top + r.height / 2);
+    if (Math.hypot(dx, dy) < r.width * 0.9) setMagnet(dx * 0.28, dy * 0.38, 1.04);
+    else if (magnetOn) setMagnet(0, 0, 1);
+  });
+  views.home.addEventListener("pointerleave", () => setMagnet(0, 0, 1));
+
+  /* ---------- Navigation : #  →  #menu  →  #menu/burgers ---------- */
+
+  let currentView = null;
+  let firstRoute = true;
+
+  function showView(name) {
+    if (currentView === name) return false;
+    for (const [key, view] of Object.entries(views)) view.hidden = key !== name;
+    currentView = name;
+    return true;
   }
 
   function route() {
     const [page, id] = location.hash.replace(/^#\/?/, "").split("/");
 
-    if (page === "menu" && id) {
-      const cat = categories.find((c) => c.id === decodeURIComponent(id));
-      if (cat) {
-        const wasOnCategory = !views.category.hidden;
-        renderCategory(cat);
-        show("category", cat.name);
-        centerActiveTab(wasOnCategory && !firstRender);
-        firstRender = false;
-        return;
-      }
+    if (page === "menu") {
+      const changed = showView("menu");
+      document.title = `Menu · ${restaurant.name}`;
+      startReveal();
+      const target = id && entries.find((e) => e.cat.id === decodeURIComponent(id));
+      if (target) scrollToEntry(target, !changed);
+      else if (changed) window.scrollTo(0, 0);
+      if (changed && !firstRoute) $("#menu-title").focus({ preventScroll: true });
+      onScroll();
+    } else {
+      showView("home");
+      document.title = restaurant.name;
+      window.scrollTo(0, 0);
+      setMagnet(0, 0, 1);
     }
-
-    if (page === "menu") show("categories", "Notre menu");
-    else show("home");
-    firstRender = false;
+    firstRoute = false;
   }
 
   window.addEventListener("hashchange", route);

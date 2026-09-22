@@ -4,89 +4,56 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Burger Street</title>
-  <meta name="description" content="Découvrez le menu de Burger Street : burgers, sandwichs, tacos, paninis, tex-mex, salades, pâtes, desserts et boissons.">
-  <meta name="theme-color" content="#121110">
+  <meta name="description" content="Le menu de Burger Street : burgers, sandwichs, tacos, paninis, tex-mex, salades, pâtes, desserts et boissons.">
+  <meta name="theme-color" content="#0e0d0c">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍔</text></svg>">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="preload" href="fonts/anton-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
   <!-- ============ ACCUEIL ============ -->
-  <section id="view-home" class="view view-home">
-    <div class="home-inner">
-      <svg class="home-burger" viewBox="0 0 160 130" aria-hidden="true">
-        <path d="M20 98 H140 V104 Q140 120 124 120 H36 Q20 120 20 104 Z" fill="#E8912E"/>
-        <rect x="14" y="78" width="132" height="22" rx="11" fill="#5A2E17"/>
-        <path d="M30 88 H52 M64 92 H84 M98 87 H126" stroke="#7A4323" stroke-width="3" stroke-linecap="round"/>
-        <path d="M18 74 H142 V80 H120 L112 93 L104 80 H62 L54 89 L46 80 H18 Z" fill="#FFC928"/>
-        <path d="M14 64 H146 V69 Q138 80 130 72 Q122 80 114 72 Q106 80 98 72 Q90 80 82 72 Q74 80 66 72 Q58 80 50 72 Q42 80 34 72 Q26 80 18 72 Q14 70 14 64 Z" fill="#7BC75B"/>
-        <path d="M16 60 C16 26 46 8 80 8 C114 8 144 26 144 60 Q144 68 136 68 H24 Q16 68 16 60 Z" fill="#F2A33A"/>
-        <path d="M34 40 C42 26 56 19 72 17" stroke="#FFD08A" stroke-width="5" stroke-linecap="round" fill="none" opacity=".75"/>
-        <g fill="#FFF4DC">
-          <ellipse cx="62" cy="32" rx="4.2" ry="2.3" transform="rotate(-20 62 32)"/>
-          <ellipse cx="86" cy="23" rx="4.2" ry="2.3" transform="rotate(10 86 23)"/>
-          <ellipse cx="108" cy="34" rx="4.2" ry="2.3" transform="rotate(25 108 34)"/>
-          <ellipse cx="82" cy="45" rx="4.2" ry="2.3" transform="rotate(-8 82 45)"/>
-          <ellipse cx="50" cy="50" rx="4.2" ry="2.3" transform="rotate(-28 50 50)"/>
-          <ellipse cx="118" cy="52" rx="4.2" ry="2.3" transform="rotate(22 118 52)"/>
-        </g>
-      </svg>
+  <section id="view-home" class="view hero" aria-labelledby="hero-title">
+    <div class="hero-bg" aria-hidden="true"></div>
 
-      <p class="home-kicker">Bienvenue chez</p>
-      <h1 class="logo" id="logo">Burger <span>Street</span></h1>
-      <p class="home-tagline" data-restaurant="tagline"></p>
-
-      <a href="#menu" class="btn-menu">
-        Voir notre menu
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-      </a>
-    </div>
-  </section>
-
-  <!-- ============ CATÉGORIES ============ -->
-  <section id="view-categories" class="view" hidden>
-    <header class="sticky-head">
-      <div class="topbar">
-        <a href="#" class="back">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg>
-          Accueil
-        </a>
-        <a href="#" class="brand" data-brand></a>
-      </div>
+    <header class="hero-top">
+      <span class="brand" data-brand></span>
     </header>
 
-    <div class="container">
-      <h2 class="page-title" tabindex="-1" data-focus>Notre menu</h2>
-      <p class="page-sub">Choisissez une catégorie</p>
-      <ul class="cat-grid" id="cat-grid"></ul>
-      <p class="footnote" data-restaurant="footnote"></p>
+    <div class="hero-body">
+      <h1 id="hero-title" class="hero-title">Découvrez <span>notre menu</span></h1>
+      <div class="btn-wrap" id="btn-wrap">
+        <a href="#menu" class="btn-menu" id="btn-menu">
+          Menu
+          <span class="btn-arrow" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </span>
+        </a>
+      </div>
     </div>
+
+    <p class="hero-hint" data-restaurant="tagline"></p>
   </section>
 
-  <!-- ============ DÉTAIL D'UNE CATÉGORIE ============ -->
-  <section id="view-category" class="view" hidden>
-    <header class="sticky-head">
-      <div class="topbar">
-        <a href="#menu" class="back">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg>
-          Catégories
+  <!-- ============ MENU ============ -->
+  <div id="view-menu" class="view menu-view" hidden>
+    <header class="menu-head" id="menu-head">
+      <div class="menu-bar">
+        <a href="#" class="home-link" aria-label="Retour à l'accueil">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg>
+          <span class="brand" data-brand></span>
         </a>
-        <a href="#" class="brand" data-brand></a>
       </div>
-      <nav class="cat-tabs" id="cat-tabs" aria-label="Catégories du menu"></nav>
+      <nav class="cat-nav" id="cat-nav" aria-label="Catégories du menu"></nav>
     </header>
 
-    <div class="container container-narrow">
-      <h2 class="page-title" id="cat-title" tabindex="-1" data-focus></h2>
-      <p class="cat-note" id="cat-note"></p>
-      <ul class="items" id="cat-items"></ul>
-      <nav class="pager" id="cat-pager" aria-label="Catégorie précédente ou suivante"></nav>
+    <main class="menu" id="menu">
+      <h1 class="visually-hidden" id="menu-title" tabindex="-1">Menu</h1>
+      <div id="sections"></div>
       <p class="footnote" data-restaurant="footnote"></p>
-    </div>
-  </section>
+    </main>
+  </div>
 
   <noscript>
     <p class="noscript">Activez JavaScript pour afficher le menu.</p>

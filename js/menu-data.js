@@ -18,17 +18,15 @@
      image        : photo facultative, ex. "images/cheese.jpg"
 
    Pour chaque catégorie :
-     id         : identifiant sans espace ni accent (utilisé dans l'adresse)
-     name       : nom affiché
-     emoji      : icône de la catégorie
-     note       : phrase d'info affichée en haut de la catégorie (facultatif)
-     countLabel : texte sous le nom de la catégorie (par défaut « X choix »)
+     id   : identifiant sans espace ni accent (utilisé dans l'adresse, ex. #menu/burgers)
+     name : nom affiché (titre de la section et bouton de la barre de catégories)
+     note : phrase d'info affichée sous le titre de la catégorie (facultatif)
    ===================================================================== */
 
 window.MENU = {
   restaurant: {
     name: "Burger Street",
-    tagline: "Burgers · Sandwichs · Tacos",
+    tagline: "Burgers · Sandwichs · Tacos · Paninis",
     footnote: "Prix nets en euros. Informations sur les allergènes disponibles sur demande."
   },
 
@@ -36,7 +34,6 @@ window.MENU = {
     {
       id: "burgers",
       name: "Burgers",
-      emoji: "🍔",
       items: [
         { name: "Cheese",         description: "1 steak 90 g + cheddar",                                   price: 6.5 },
         { name: "Double Cheese",  description: "2 steaks 90 g + cheddar",                                  price: 8.5 },
@@ -52,7 +49,6 @@ window.MENU = {
     {
       id: "sandwichs",
       name: "Sandwichs",
-      emoji: "🥙",
       items: [
         { name: "Kebab",    description: "Viande de kebab",                                    price: 8.5 },
         { name: "Curry",    description: "Chicken curry + cheddar",                            price: 8.5 },
@@ -70,8 +66,6 @@ window.MENU = {
     {
       id: "tacos",
       name: "Tacos",
-      emoji: "🌯",
-      countLabel: "1 à 3 viandes",
       items: [
         {
           name: "Tacos classique",
@@ -93,8 +87,6 @@ window.MENU = {
     {
       id: "paninis",
       name: "Paninis",
-      emoji: "🥪",
-      countLabel: "7 saveurs",
       items: [
         {
           name: "Panini",
@@ -108,7 +100,6 @@ window.MENU = {
     {
       id: "tex-mex",
       name: "Tex-Mex",
-      emoji: "🍗",
       items: [
         { name: "Tenders",      description: "5 pièces", price: 7 },
         { name: "Wings",        description: "5 pièces", price: 6 },
@@ -121,7 +112,6 @@ window.MENU = {
     {
       id: "salades",
       name: "Salades",
-      emoji: "🥗",
       items: [
         { name: "Niçoise",     description: "Salade, tomate, thon, maïs, œuf, olives",                         price: 8 },
         { name: "Genova",      description: "Salade, tomate, lardons, poulet, emmental",                       price: 8 },
@@ -133,7 +123,6 @@ window.MENU = {
     {
       id: "pates",
       name: "Pâtes",
-      emoji: "🍝",
       items: [
         { name: "Carbonara",  description: "Crème fraîche, lardons, œuf",          price: 8 },
         { name: "Bolognaise", description: "Viande hachée, sauce tomate",          price: 8 },
@@ -146,7 +135,6 @@ window.MENU = {
     {
       id: "desserts",
       name: "Desserts",
-      emoji: "🍰",
       items: [
         {
           name: "Milkshake",
@@ -164,7 +152,6 @@ window.MENU = {
     {
       id: "boissons",
       name: "Boissons",
-      emoji: "🥤",
       items: [
         { name: "Coca-Cola / Oasis", price: 2 },
         { name: "Ice Tea",           price: 2 },
@@ -175,8 +162,6 @@ window.MENU = {
     {
       id: "sauces",
       name: "Sauces",
-      emoji: "🥫",
-      countLabel: "7 sauces",
       items: [
         {
           name: "Nos sauces",
